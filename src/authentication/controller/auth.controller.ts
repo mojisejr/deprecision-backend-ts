@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { inject, injectable } from "inversify";
 import * as jwt from "jsonwebtoken";
+import crypto from "crypto";
 import { catchAsyncError } from "../../core/catchAsyncError";
 import TYPES from "../../core/container/types";
 // import { UserRepository } from "../domain/users/repository/user.repository";
@@ -8,13 +9,19 @@ import { UserDTO } from "../../domain/users/dto/user.dto";
 import { APPError } from "../../error/app.error";
 import { IAuthController } from "./auth.controller.interface";
 import { jwtDecodedDTO } from "../dto/jwt.dto";
-import { AuthRepository } from "../repository/auth.repository.interface";
+import { IAuthRepository } from "../repository/auth.repository.interface";
+import { IEmailSender } from "../../services/emailsender";
 
 @injectable()
 export class AuthController implements IAuthController {
-  private userRepository: AuthRepository;
-  constructor(@inject(TYPES.AuthRepository) userRepository: AuthRepository) {
+  private userRepository: IAuthRepository;
+  private emailSender: IEmailSender;
+  constructor(
+    @inject(TYPES.AuthRepository) userRepository: IAuthRepository,
+    @inject(TYPES.EmailSender) emailSender: IEmailSender
+  ) {
     this.userRepository = userRepository;
+    this.emailSender = emailSender;
   }
 
   private signToken(id: string) {
@@ -62,7 +69,10 @@ export class AuthController implements IAuthController {
       const signedInUser = await this.userRepository.getPasswordByEmail(email);
       if (
         !signedInUser ||
-        !this.userRepository.isCorrectPassword(password, signedInUser.password)
+        !this.userRepository.isCorrectPassword(
+          password,
+          signedInUser.password || ""
+        )
       ) {
         return next(APPError.create(`Incorrect email or password`, 401));
       }
@@ -130,16 +140,77 @@ export class AuthController implements IAuthController {
     };
   };
 
+  // not yet needed
   forgotPassword = catchAsyncError(
     async (req: Request, res: Response, next: NextFunction) => {
-      const user = await this.userRepository.getByEmail(req.body.email);
+      const user = await this.userRepository.findUser({
+        email: req.body.email,
+      });
       if (!user) {
         return next(
           APPError.create("There is no user with email address", 404)
         );
       }
 
-      const resetToken = this.userRepository.createPasswordResetToken(user._id);
+      const resetToken = await this.userRepository.createPasswordResetToken(
+        user._id
+      );
+      const resetURL = `${req.protocol}://${req.get(
+        "host"
+      )}/api/v1/users/resetPassword/${resetToken}`;
+
+      const message = `Forget your password? submit a PATCH request with your new password
+      and passwordConfirm to: ${resetURL}. \n
+      If you didn't forget your password please ignore this email!`;
+
+      try {
+        await this.emailSender.sendEmail({
+          email: user.email,
+          subject: `your password reset token available only 10 min`,
+          message,
+        });
+      } catch (error) {
+        user.password;
+        user.passwordResetToken = undefined;
+        user.passwordResetExpires = undefined;
+        this.userRepository.save(user);
+        return next(
+          APPError.create("there was an error sending an email, try again", 500)
+        );
+      }
+      res.status(200).json({
+        status: "success",
+        message: "token sent to email!",
+      });
+    }
+  );
+
+  resetPassword = catchAsyncError(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const passwordResetToken = crypto
+        .createHash("sha256")
+        .update(req.params.token)
+        .digest("hex");
+      console.log("reset token from requset:", passwordResetToken);
+      const user = await this.userRepository.findUser({
+        passwordResetToken: passwordResetToken,
+        passwordResetExpires: { $gt: Date.now() },
+      });
+
+      if (!user) {
+        return next(APPError.create("token are invalid or expired", 400));
+      }
+      user.password = req.body.password;
+      user.passwordConfirm = req.body.passwordConfirm;
+      user.passwordResetToken = undefined;
+      user.passwordResetExpires = undefined;
+      this.userRepository.save(user);
+
+      const token = this.signToken(user._id);
+      res.status(200).json({
+        status: "success",
+        token,
+      });
     }
   );
 

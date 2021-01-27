@@ -12,12 +12,21 @@ import { UserDTO } from "../../domain/users/dto/user.dto";
 import { IProductController } from "../../domain/products/controller/product.controller.interface";
 import { IUserController } from "../../domain/users/controller/user.controller.interface";
 import { UserController } from "../../domain/users/controller/user.controller";
-import { AuthRepository } from "../../authentication/repository/auth.repository.interface";
+import { IAuthRepository } from "../../authentication/repository/auth.repository.interface";
+import { AuthRepository } from "../../authentication/repository/auth.repository";
 import { IAuthController } from "../../authentication/controller/auth.controller.interface";
 import { AuthController } from "../../authentication/controller/auth.controller";
+import { EmailSender, IEmailSender } from "../../services/emailsender";
 
 const container = new Container();
 
+//emailSender binding
+container
+  .bind<IEmailSender>(TYPES.EmailSender)
+  .to(EmailSender)
+  .inSingletonScope();
+
+//repository binding
 container
   .bind<Repository<IProduct, ProductDTO>>(TYPES.Repository)
   .to(ProductRepository)
@@ -26,7 +35,7 @@ container
   .bind<Repository<IUser, UserDTO>>(TYPES.Repository)
   .to(UserRepository)
   .whenTargetNamed(TAGS.UserRepository);
-container.bind<AuthRepository>(TYPES.AuthRepository).to(UserRepository);
+container.bind<IAuthRepository>(TYPES.AuthRepository).to(AuthRepository);
 container
   .bind<IProductController>(TYPES.ProductController)
   .to(ProductController);

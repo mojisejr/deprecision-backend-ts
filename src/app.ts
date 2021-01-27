@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import morgan from "morgan";
 import userRouter from "./routes/user.router";
@@ -13,7 +13,7 @@ app.use(cors());
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/users", userRouter);
 
-app.all("*", (req, res, next) => {
+app.all("*", (req: Request, res: Response, next: NextFunction) => {
   next(APPError.create(`this ${req.originalUrl} not found!`, 404));
 });
 

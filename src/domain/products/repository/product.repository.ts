@@ -13,6 +13,10 @@ export class ProductRepository implements Repository<IProduct, ProductDTO> {
     return newProduct;
   }
 
+  save() {
+    throw new Error("no implementation");
+  }
+
   async getAll(queryString?: any): Promise<IProduct[]> {
     const api: APIFeature = new MongooseAPIFeature(productModel, queryString)
       .filter()
