@@ -2,7 +2,18 @@ import { IUser } from "./user.interface";
 import mongoose, { Schema, Document, Model } from "mongoose";
 import bcrypt from "bcrypt";
 import validator from "validator";
-export interface User extends Document, IUser {}
+export interface User extends Document<IUser> {
+  _id?: any;
+  name: string;
+  email: string;
+  password: string | undefined;
+  displayName: string;
+  role: string;
+  passwordConfirm: string | undefined;
+  passwordChangedAt: Date;
+  passwordResetToken: String | undefined;
+  passwordResetExpires: Date | undefined;
+}
 export interface UserModel extends Model<User> {
   isPasswordChangedAfterJWTIssued(jwtTime: string): boolean;
 }

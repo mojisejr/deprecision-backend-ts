@@ -1,10 +1,7 @@
 import { injectable } from "inversify";
+import { IEmailSender } from "./../core/interfaces/base.emailsender";
 import nodemailer, { TransportOptions } from "nodemailer";
-
 //SMTP mailsender
-export interface IEmailSender {
-  sendEmail(mailoptions: any): void | Promise<void>;
-}
 
 interface Options extends TransportOptions {
   host: string;

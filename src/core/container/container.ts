@@ -16,7 +16,10 @@ import { IAuthRepository } from "../../authentication/repository/auth.repository
 import { AuthRepository } from "../../authentication/repository/auth.repository";
 import { IAuthController } from "../../authentication/controller/auth.controller.interface";
 import { AuthController } from "../../authentication/controller/auth.controller";
-import { EmailSender, IEmailSender } from "../../services/emailsender";
+import { IEmailSender } from "./../interfaces/base.emailsender";
+import { EmailSender } from "../../services/emailsender";
+import { BaseController } from "../base.controller.class";
+import { IBaseController } from "../interfaces/base.controller.interface";
 
 const container = new Container();
 

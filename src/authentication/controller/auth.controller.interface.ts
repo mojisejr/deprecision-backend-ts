@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { IBaseController } from "../../core/interfaces/base.controller.interface";
 export interface IAuthController {
   signUp(req: Request, res: Response, next: NextFunction): void;
   signIn(req: Request, res: Response, next: NextFunction): void;

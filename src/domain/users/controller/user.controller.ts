@@ -8,15 +8,19 @@ import { inject, injectable, named } from "inversify";
 import TYPES from "../../../core/container/types";
 import TAGS from "../../../core/container/tags";
 import { IUserController } from "./user.controller.interface";
+import { BaseController } from "../../../core/base.controller.class";
 
 @injectable()
-export class UserController implements IUserController {
+export class UserController
+  extends BaseController<IUser, UserDTO>
+  implements IUserController {
   private userRepository: Repository<IUser, UserDTO>;
   constructor(
     @inject(TYPES.Repository)
     @named(TAGS.UserRepository)
     repository: Repository<IUser, UserDTO>
   ) {
+    super(repository);
     this.userRepository = repository;
   }
 

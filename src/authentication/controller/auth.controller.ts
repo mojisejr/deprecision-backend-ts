@@ -10,7 +10,7 @@ import { APPError } from "../../error/app.error";
 import { IAuthController } from "./auth.controller.interface";
 import { jwtDecodedDTO } from "../dto/jwt.dto";
 import { IAuthRepository } from "../repository/auth.repository.interface";
-import { IEmailSender } from "../../services/emailsender";
+import { IEmailSender } from "./../../core/interfaces/base.emailsender";
 
 @injectable()
 export class AuthController implements IAuthController {
