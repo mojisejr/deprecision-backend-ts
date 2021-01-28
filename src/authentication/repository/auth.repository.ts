@@ -6,10 +6,6 @@ import crypto from "crypto";
 import bcrypt from "bcrypt";
 
 export class AuthRepository extends UserRepository implements IAuthRepository {
-  async getByEmail(email: string): Promise<IUser> {
-    return await userModel.findOne({ email: email });
-  }
-
   async getPasswordByEmail(email: string): Promise<IUser> {
     return await userModel.findOne({ email }).select("+password");
   }

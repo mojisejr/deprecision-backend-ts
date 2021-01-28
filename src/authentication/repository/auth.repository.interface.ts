@@ -4,7 +4,7 @@ import { Repository } from "./../../core/interfaces/base.repository";
 
 export interface IAuthRepository extends Repository<IUser, UserDTO> {
   getPasswordByEmail(email: string): IUser | Promise<IUser>;
-  getByEmail(email: string): IUser | Promise<IUser>;
+  // getByEmail(email: string): IUser | Promise<IUser>;
   findUser(option: any): IUser | Promise<IUser>;
   isCorrectPassword(
     reqPassword: string,
