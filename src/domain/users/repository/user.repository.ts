@@ -11,8 +11,13 @@ export class UserRepository implements Repository<IUser, UserDTO> {
     return await userModel.create(dto);
   }
 
-  async save(user: IUser): Promise<void> {
-    await user.save({ validateBeforeSave: false });
+  async save(user: IUser, validation?: boolean): Promise<void> {
+    try {
+      await user.save({ validateBeforeSave: validation || true });
+    } catch (error) {
+      console.log("error", error);
+      throw new Error(error);
+    }
   }
 
   async getById(id: string): Promise<IUser> {

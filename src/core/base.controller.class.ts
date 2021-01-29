@@ -22,7 +22,7 @@ export class BaseController<T, K> implements IBaseController {
       return res.status(201).json({
         status: "success",
         data: {
-          ...newData,
+          data: newData,
         },
       });
     }
@@ -35,7 +35,7 @@ export class BaseController<T, K> implements IBaseController {
         status: "success",
         results: dataCollection.length,
         data: {
-          ...dataCollection,
+          data: dataCollection,
         },
       });
     }
@@ -51,7 +51,7 @@ export class BaseController<T, K> implements IBaseController {
       res.status(200).json({
         status: "success",
         data: {
-          ...data,
+          data: data,
         },
       });
     }

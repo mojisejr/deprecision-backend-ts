@@ -1,13 +1,13 @@
-import { Repository } from "./../../../core/interfaces/base.repository";
-import { IUser } from "./../model/user.interface";
-import { catchAsyncError } from "./../../../core/catchAsyncError";
 import { Request, Response, NextFunction } from "express";
-import { UserDTO } from "../dto/user.dto";
-import { APPError } from "../../../error/app.error";
 import { inject, injectable, named } from "inversify";
-import TYPES from "../../../core/container/types";
 import TAGS from "../../../core/container/tags";
+import TYPES from "../../../core/container/types";
+import { APPError } from "../../../error/app.error";
+import { catchAsyncError } from "./../../../core/catchAsyncError";
+import { IUser } from "./../model/user.interface";
+import { UserDTO, UserUpdateInfoDTO } from "../dto/user.dto";
 import { IUserController } from "./user.controller.interface";
+import { Repository } from "./../../../core/interfaces/base.repository";
 import { BaseController } from "../../../core/base.controller.class";
 
 @injectable()
@@ -70,6 +70,27 @@ export class UserController
   delete = catchAsyncError(
     async (req: Request, res: Response, next: NextFunction) => {
       next(APPError.create("no implementation", 500));
+    }
+  );
+
+  updateMe = catchAsyncError(
+    async (req: Request, res: Response, next: NextFunction) => {
+      //1 create an error if user try to update their password
+      const updateData: UserUpdateInfoDTO = {
+        name: req.body.name,
+      };
+      //2 update user document
+      const updatedUser = await this.userRepository.update(
+        req.user._id,
+        updateData
+      );
+      if (!updatedUser) {
+        next(APPError.create("cannot update the user data", 400));
+      }
+      res.status(204).json({
+        status: "success",
+        message: "data has been updated",
+      });
     }
   );
 }

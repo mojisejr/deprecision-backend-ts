@@ -18,8 +18,6 @@ import { IAuthController } from "../../authentication/controller/auth.controller
 import { AuthController } from "../../authentication/controller/auth.controller";
 import { IEmailSender } from "./../interfaces/base.emailsender";
 import { EmailSender } from "../../services/emailsender";
-import { BaseController } from "../base.controller.class";
-import { IBaseController } from "../interfaces/base.controller.interface";
 
 const container = new Container();
 
@@ -39,9 +37,12 @@ container
   .to(UserRepository)
   .whenTargetNamed(TAGS.UserRepository);
 container.bind<IAuthRepository>(TYPES.AuthRepository).to(AuthRepository);
+
+//controller binding
 container
   .bind<IProductController>(TYPES.ProductController)
   .to(ProductController);
+
 container.bind<IUserController>(TYPES.UserController).to(UserController);
 container.bind<IAuthController>(TYPES.AuthController).to(AuthController);
 

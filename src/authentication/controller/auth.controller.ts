@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { inject, injectable } from "inversify";
 import * as jwt from "jsonwebtoken";
-import crypto from "crypto";
+import crypto, { sign } from "crypto";
 import { catchAsyncError } from "../../core/catchAsyncError";
 import TYPES from "../../core/container/types";
 // import { UserRepository } from "../domain/users/repository/user.repository";
@@ -11,6 +11,8 @@ import { IAuthController } from "./auth.controller.interface";
 import { jwtDecodedDTO } from "../dto/jwt.dto";
 import { IAuthRepository } from "../repository/auth.repository.interface";
 import { IEmailSender } from "./../../core/interfaces/base.emailsender";
+import { IUser } from "../../domain/users/model/user.interface";
+import { create } from "domain";
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -31,6 +33,27 @@ export class AuthController implements IAuthController {
     });
   }
 
+  protected jwtTokenVerification(inputToken: string, secret: string) {
+    return new Promise<jwtDecodedDTO>((resolve, rejects) => {
+      if (!inputToken || !secret) {
+        rejects(new Error("input token or secret is undefined"));
+      }
+      const decoded = jwt.verify(inputToken, secret) as jwtDecodedDTO;
+      resolve(decoded);
+    });
+  }
+
+  createAndSendToken(user: IUser, statusCode: number, res: Response) {
+    const token = this.signToken(user._id);
+    res.status(statusCode).json({
+      status: "success",
+      token: token,
+      data: {
+        user,
+      },
+    });
+  }
+
   signUp = catchAsyncError(
     async (req: Request, res: Response, next: NextFunction) => {
       const userDataFromReq: UserDTO = {
@@ -45,15 +68,7 @@ export class AuthController implements IAuthController {
         return next(
           APPError.create("somthing wrong with your data fetching", 500)
         );
-      const jwtToken = this.signToken(createdUser._id);
-
-      res.status(200).json({
-        status: "success",
-        token: jwtToken,
-        data: {
-          user: createdUser,
-        },
-      });
+      this.createAndSendToken(createdUser, 201, res);
     }
   );
 
@@ -69,20 +84,15 @@ export class AuthController implements IAuthController {
       const signedInUser = await this.userRepository.getPasswordByEmail(email);
       if (
         !signedInUser ||
-        !this.userRepository.isCorrectPassword(
+        !(await this.userRepository.isCorrectPassword(
           password,
-          signedInUser.password || ""
-        )
+          signedInUser.password!
+        ))
       ) {
         return next(APPError.create(`Incorrect email or password`, 401));
       }
 
-      const jwtToken = this.signToken(signedInUser._id);
-      res.status(200).json({
-        status: "success",
-        token: jwtToken,
-        message: "authenticated",
-      });
+      this.createAndSendToken(signedInUser, 200, res);
     }
   );
 
@@ -173,7 +183,7 @@ export class AuthController implements IAuthController {
         user.password;
         user.passwordResetToken = undefined;
         user.passwordResetExpires = undefined;
-        this.userRepository.save(user);
+        this.userRepository.save(user, false);
         return next(
           APPError.create("there was an error sending an email, try again", 500)
         );
@@ -191,7 +201,7 @@ export class AuthController implements IAuthController {
         .createHash("sha256")
         .update(req.params.token)
         .digest("hex");
-      console.log("reset token from requset:", passwordResetToken);
+      // console.log("reset token from requset:", passwordResetToken);
       const user = await this.userRepository.findUser({
         passwordResetToken: passwordResetToken,
         passwordResetExpires: { $gt: Date.now() },
@@ -204,23 +214,39 @@ export class AuthController implements IAuthController {
       user.passwordConfirm = req.body.passwordConfirm;
       user.passwordResetToken = undefined;
       user.passwordResetExpires = undefined;
-      this.userRepository.save(user);
+      this.userRepository.save(user, false);
 
-      const token = this.signToken(user._id);
-      res.status(200).json({
-        status: "success",
-        token,
-      });
+      this.createAndSendToken(user, 200, res);
     }
   );
 
-  protected jwtTokenVerification(inputToken: string, secret: string) {
-    return new Promise<jwtDecodedDTO>((resolve, rejects) => {
-      if (!inputToken || !secret) {
-        rejects(new Error("input token or secret is undefined"));
+  updatePassword = catchAsyncError(
+    async (req: Request, res: Response, next: NextFunction) => {
+      //1 get user from the collection
+      const oldPassword = req.body.oldPassword;
+      const newPassword = req.body.newPassword;
+      const passwordConfirm = req.body.passwordConfirm;
+
+      const currentUser = await this.userRepository.getPasswordByEmail(
+        req.user.email
+      );
+      if (!currentUser) {
+        return next(APPError.create("you are not logged in, try again", 401));
       }
-      const decoded = jwt.verify(inputToken, secret) as jwtDecodedDTO;
-      resolve(decoded);
-    });
-  }
+      //2 check if the password is correct
+      const isPasswordCorrect = await this.userRepository.isCorrectPassword(
+        oldPassword,
+        currentUser.password!
+      );
+      if (!isPasswordCorrect) {
+        return next(APPError.create("incorrect password for this user", 401));
+      }
+      //3 then update the password
+      currentUser.password = newPassword;
+      currentUser.passwordConfirm = passwordConfirm;
+      await this.userRepository.save(currentUser);
+      //4 log the user in (send back the token)
+      this.createAndSendToken(currentUser, 201, res);
+    }
+  );
 }

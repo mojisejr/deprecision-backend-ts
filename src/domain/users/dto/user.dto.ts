@@ -11,3 +11,7 @@ export interface UserDTO extends DTO {
   passwordResetToken?: String;
   passwordResetExpires?: Date;
 }
+
+export interface UserUpdateInfoDTO extends DTO {
+  name: string;
+}
