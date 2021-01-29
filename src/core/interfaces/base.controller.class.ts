@@ -1,9 +1,9 @@
 import { Response, Request, NextFunction } from "express";
 import { injectable } from "inversify";
-import { APPError } from "../error/app.error";
-import { catchAsyncError } from "./catchAsyncError";
-import { IBaseController } from "./interfaces/base.controller.interface";
-import { Repository } from "./interfaces/base.repository";
+import { APPError } from "../../error/app.error";
+import { catchAsyncError } from "../catchAsyncError";
+import { IBaseController } from "./base.controller.interface";
+import { Repository } from "./base.repository";
 
 @injectable()
 export class BaseController<T, K> implements IBaseController {

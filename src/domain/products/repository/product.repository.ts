@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { APIFeature } from "../../../core/api.feature";
+import { APIFeature } from "../../../core/interfaces/base.api.feature";
 import { Repository } from "../../../core/interfaces/base.repository";
 import { MongooseAPIFeature } from "../../../utils/mongoose.api.feature";
 import { ProductDTO } from "../dto/product.dto";

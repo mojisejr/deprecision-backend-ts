@@ -1,5 +1,5 @@
 import { ProductRepository } from "../domain/products/repository/product.repository";
-import { APIFeature } from "./../core/api.feature";
+import { APIFeature } from "../core/interfaces/base.api.feature";
 
 // interface MongooseModel {
 //   find(queryString?: string): this;

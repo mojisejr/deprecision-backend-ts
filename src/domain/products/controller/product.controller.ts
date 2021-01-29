@@ -1,6 +1,6 @@
 import { IProduct } from "./../model/product.interface";
 import { ProductDTO } from "./../dto/product.dto";
-import { BaseController } from "../../../core/base.controller.class";
+import { BaseController } from "../../../core/interfaces/base.controller.class";
 import { inject, injectable, named } from "inversify";
 import TYPES from "../../../core/container/types";
 import { Repository } from "../../../core/interfaces/base.repository";

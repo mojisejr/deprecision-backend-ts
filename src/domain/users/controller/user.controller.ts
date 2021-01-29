@@ -8,7 +8,7 @@ import { IUser } from "./../model/user.interface";
 import { UserDTO, UserUpdateInfoDTO } from "../dto/user.dto";
 import { IUserController } from "./user.controller.interface";
 import { Repository } from "./../../../core/interfaces/base.repository";
-import { BaseController } from "../../../core/base.controller.class";
+import { BaseController } from "../../../core/interfaces/base.controller.class";
 
 @injectable()
 export class UserController
