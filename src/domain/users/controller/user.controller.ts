@@ -67,11 +67,6 @@ export class UserController
       });
     }
   );
-  delete = catchAsyncError(
-    async (req: Request, res: Response, next: NextFunction) => {
-      next(APPError.create("no implementation", 500));
-    }
-  );
 
   updateMe = catchAsyncError(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -90,6 +85,18 @@ export class UserController
       res.status(204).json({
         status: "success",
         message: "data has been updated",
+      });
+    }
+  );
+
+  deleteMe = catchAsyncError(
+    async (req: Request, res: Response, next: NextFunction) => {
+      console.log(req.user);
+      await this.userRepository.delete(req.user._id);
+
+      res.status(204).json({
+        status: "success",
+        data: "null",
       });
     }
   );

@@ -2,6 +2,8 @@ import { IUser } from "./user.interface";
 import mongoose, { Schema, Document, Model } from "mongoose";
 import bcrypt from "bcrypt";
 import validator from "validator";
+import { NextFunction } from "express";
+import { APPError } from "../../../error/app.error";
 export interface User extends Document<IUser> {
   _id?: any;
   name: string;
@@ -55,6 +57,11 @@ export const userSchema = new Schema<User>({
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
+  active: {
+    type: Boolean,
+    default: true,
+    select: false,
+  },
 });
 
 userSchema.pre("save", async function (this: User, next) {
@@ -72,6 +79,22 @@ userSchema.pre("save", function (this: User, next) {
   if (!this.isModified("password") || this.isNew) return next();
   this.passwordChangedAt = new Date(Date.now() - 1000);
   next();
+});
+
+// userSchema.pre(
+//   "find" || "findOneAndUpdate" || "findOneAndDelete",
+//   function (this: UserModel, next) {
+//     this.find({ active: { $ne: false } });
+//     next(null);
+//   }
+// );
+userSchema.pre<UserModel>(/^find/, function (next) {
+  try {
+    this.find({ active: { $ne: false } });
+    next(null);
+  } catch (error) {
+    next(APPError.create("query system failed, contact system engineer", 400));
+  }
 });
 
 export const userModel = mongoose.model<User, UserModel>("User", userSchema);

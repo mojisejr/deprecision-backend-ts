@@ -8,6 +8,7 @@ declare global {
       PAGE_LIMIT: string;
       JWT_SECRET: string;
       JWT_EXPIRES_IN: string;
+      JWT_COOKIE_EXPIRES_IN: string;
       SYSTEM_EMAIL_USERNAME: string;
       SYSTEM_EMAIL_PASSWORD: string;
       SYSTEM_EMAIL_HOST: string;

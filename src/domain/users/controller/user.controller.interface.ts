@@ -3,4 +3,5 @@ import { IBaseController } from "../../../core/interfaces/base.controller.interf
 
 export interface IUserController extends IBaseController {
   updateMe(req: Request, res: Response, next: NextFunction): void;
+  deleteMe(req: Request, res: Response, next: NextFunction): void;
 }

@@ -13,6 +13,7 @@ import { IAuthRepository } from "../repository/auth.repository.interface";
 import { IEmailSender } from "./../../core/interfaces/base.emailsender";
 import { IUser } from "../../domain/users/model/user.interface";
 import { create } from "domain";
+import { kMaxLength } from "buffer";
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -27,7 +28,6 @@ export class AuthController implements IAuthController {
   }
 
   private signToken(id: string) {
-    //TODO: เดี๋ยวต้องใช้ dotenv มากำหนด
     return jwt.sign({ id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
@@ -43,8 +43,25 @@ export class AuthController implements IAuthController {
     });
   }
 
-  createAndSendToken(user: IUser, statusCode: number, res: Response) {
+  private createAndSendToken(user: IUser, statusCode: number, res: Response) {
     const token = this.signToken(user._id);
+
+    const cookieOption = {
+      expires: new Date(
+        Date.now() + +process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+      ),
+      //หมายถึงต้องใช้กับ https เท่านั้น
+      secure: false,
+      //ป้องกัน cross site scipting คือจะแก้ cookie กันนี้ไม่ได้เป็น readonly
+      httpOnly: true,
+    };
+
+    if (process.env.NODE_ENV === "production") cookieOption.secure = true;
+
+    //set the jwt to the cookie
+    res.cookie("jwt", token, cookieOption);
+    //do not expose password to user via response
+    user.password = undefined;
     res.status(statusCode).json({
       status: "success",
       token: token,
@@ -96,6 +113,51 @@ export class AuthController implements IAuthController {
     }
   );
 
+  signOut = catchAsyncError(
+    async (req: Request, res: Response, next: NextFunction) => {
+      res.cookie("jwt", "logged out", {
+        expires: new Date(Date.now() + 10 * 1000),
+        httpOnly: true,
+      });
+
+      res.status(200).json({
+        status: "success",
+      });
+    }
+  );
+
+  //same with protect function but no error just next() to the other middleware
+  isLoggedIn = catchAsyncError(
+    async (req: Request, res: Response, next: NextFunction) => {
+      let loggedInToken = null;
+      if (req.cookies.jwt) {
+        loggedInToken = req.cookies.jwt;
+      }
+      if (!loggedInToken) {
+        return next();
+      }
+      const decodedData = await this.jwtTokenVerification(
+        loggedInToken,
+        process.env.JWT_SECRET
+      );
+
+      const loggedInUser = await this.userRepository.getById(decodedData.id);
+      if (!loggedInUser) {
+        return next();
+      }
+      const passwordChanged = this.userRepository.isPasswordChangedAfterIssued(
+        loggedInUser.passwordChangedAt,
+        decodedData.iat
+      );
+      if (passwordChanged) {
+        return next();
+      }
+
+      req.user = loggedInUser;
+      next();
+    }
+  );
+
   protect = catchAsyncError(
     async (req: Request, res: Response, next: NextFunction) => {
       let inputJwtToken;
@@ -104,6 +166,8 @@ export class AuthController implements IAuthController {
         req.headers.authorization.startsWith("Bearer")
       ) {
         inputJwtToken = req.headers.authorization.split(" ")[1];
+      } else if (req.cookies.jwt) {
+        inputJwtToken = req.cookies.jwt;
       }
 
       if (!inputJwtToken) {

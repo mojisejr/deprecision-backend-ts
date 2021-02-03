@@ -1,15 +1,45 @@
 import express, { NextFunction, Request, Response } from "express";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import morgan from "morgan";
+import rateLimit from "express-rate-limit";
+import helmet from "helmet";
+import mongoSanitize from "express-mongo-sanitize";
+import hpp from "hpp";
 import userRouter from "./routes/user.router";
 import productRouter from "./routes/product.router";
 import { APPError } from "./error/app.error";
 import { globalErrorController } from "./error/global.error.controller";
 const app = express();
 
-app.use(morgan("dev"));
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
+
+const limiter = rateLimit({
+  max: 500,
+  windowMs: 60 * 60 * 1000,
+  message: "too many request from this IP please try again in an hour",
+});
+
 app.use(express.json());
+app.use(cookieParser());
+//Data sanitization against NoSQL query injection
+app.use(mongoSanitize());
+//Data sanitization against XSS
+//TODO: find some lib
+
+//Prevent HTTP Params Pollution eg. double query param
+app.use(
+  hpp({
+    //อันไหนจะให้ซ้ำได้ก็กำหนดตรงนี้
+    whitelist: [],
+  })
+);
+
 app.use(cors());
+app.use(helmet());
+app.use("/api", limiter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/users", userRouter);
 

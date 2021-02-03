@@ -9,6 +9,7 @@ export interface IUser {
   passwordChangedAt: Date;
   passwordResetToken: String | undefined;
   passwordResetExpires: Date | undefined;
+  active?: boolean;
 
   save(option?: any): Promise<IUser>;
 }

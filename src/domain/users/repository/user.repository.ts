@@ -32,6 +32,7 @@ export class UserRepository implements Repository<IUser, UserDTO> {
     return await userModel.findByIdAndUpdate(id, user);
   }
   async delete(id: string): Promise<void> {
-    throw new Error("no implementation");
+    await this.update(id, { active: false });
+    return;
   }
 }
