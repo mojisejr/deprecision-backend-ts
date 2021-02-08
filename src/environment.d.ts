@@ -4,6 +4,7 @@ declare global {
     interface ProcessEnv {
       NODE_ENV: "development" | "production";
       PORT?: string;
+      PRODUCTION_DATABASE: string;
       DATABASE_LOCAL: string;
       PAGE_LIMIT: string;
       JWT_SECRET: string;

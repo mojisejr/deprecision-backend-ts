@@ -2,7 +2,6 @@ import { IUser } from "./user.interface";
 import mongoose, { Schema, Document, Model } from "mongoose";
 import bcrypt from "bcrypt";
 import validator from "validator";
-import { NextFunction } from "express";
 import { APPError } from "../../../error/app.error";
 export interface User extends Document<IUser> {
   _id?: any;

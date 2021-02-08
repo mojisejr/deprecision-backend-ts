@@ -5,7 +5,10 @@ dotenv.config({
 import "reflect-metadata";
 import mongoose from "mongoose";
 import app from "./app";
-const Database = process.env.DATABASE_LOCAL;
+let Database = process.env.PRODUCTION_DATABASE;
+if (process.env.NODE_ENV === "development") {
+  Database = process.env.DATABASE_LOCAL;
+}
 
 mongoose.connect(
   Database,
@@ -16,7 +19,7 @@ mongoose.connect(
     useCreateIndex: true,
   },
   () => {
-    console.log("mongoose connected");
+    console.log(`mongoose connected on ${process.env.NODE_ENV} database`);
   }
 );
 

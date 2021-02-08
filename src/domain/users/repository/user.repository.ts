@@ -15,7 +15,7 @@ export class UserRepository implements Repository<IUser, UserDTO> {
     try {
       await user.save({ validateBeforeSave: validation || true });
     } catch (error) {
-      console.log("error", error);
+      // console.log("error", error);
       throw new Error(error);
     }
   }

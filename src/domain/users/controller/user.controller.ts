@@ -91,7 +91,7 @@ export class UserController
 
   deleteMe = catchAsyncError(
     async (req: Request, res: Response, next: NextFunction) => {
-      console.log(req.user);
+      // console.log(req.user);
       await this.userRepository.delete(req.user._id);
 
       res.status(204).json({

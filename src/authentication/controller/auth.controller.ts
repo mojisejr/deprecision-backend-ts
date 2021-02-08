@@ -12,8 +12,6 @@ import { jwtDecodedDTO } from "../dto/jwt.dto";
 import { IAuthRepository } from "../repository/auth.repository.interface";
 import { IEmailSender } from "./../../core/interfaces/base.emailsender";
 import { IUser } from "../../domain/users/model/user.interface";
-import { create } from "domain";
-import { kMaxLength } from "buffer";
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -45,22 +43,18 @@ export class AuthController implements IAuthController {
 
   private createAndSendToken(user: IUser, statusCode: number, res: Response) {
     const token = this.signToken(user._id);
-
-    const cookieOption = {
+    //set the jwt to the cookie
+    //do not expose password to user via response
+    res.cookie("jwt", token, {
       expires: new Date(
         Date.now() + +process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
       ),
       //หมายถึงต้องใช้กับ https เท่านั้น
-      secure: false,
+      secure: process.env.NODE_ENV === "production" ? true : false,
       //ป้องกัน cross site scipting คือจะแก้ cookie กันนี้ไม่ได้เป็น readonly
       httpOnly: true,
-    };
-
-    if (process.env.NODE_ENV === "production") cookieOption.secure = true;
-
-    //set the jwt to the cookie
-    res.cookie("jwt", token, cookieOption);
-    //do not expose password to user via response
+      sameSite: "strict",
+    });
     user.password = undefined;
     res.status(statusCode).json({
       status: "success",
@@ -169,7 +163,6 @@ export class AuthController implements IAuthController {
       } else if (req.cookies.jwt) {
         inputJwtToken = req.cookies.jwt;
       }
-
       if (!inputJwtToken) {
         return next(APPError.create("You are not logged in", 401));
       }

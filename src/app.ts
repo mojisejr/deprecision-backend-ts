@@ -1,11 +1,11 @@
 import express, { NextFunction, Request, Response } from "express";
-import cookieParser from "cookie-parser";
 import cors from "cors";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
 import hpp from "hpp";
+import cookieParser from "cookie-parser";
 import userRouter from "./routes/user.router";
 import productRouter from "./routes/product.router";
 import { APPError } from "./error/app.error";
@@ -22,6 +22,12 @@ const limiter = rateLimit({
   message: "too many request from this IP please try again in an hour",
 });
 
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:8100"],
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 //Data sanitization against NoSQL query injection
@@ -37,7 +43,6 @@ app.use(
   })
 );
 
-app.use(cors());
 app.use(helmet());
 app.use("/api", limiter);
 app.use("/api/v1/products", productRouter);
