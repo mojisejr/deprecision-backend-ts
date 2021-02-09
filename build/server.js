@@ -20,7 +20,7 @@ mongoose_1.default.connect(Database, {
     useFindAndModify: false,
     useCreateIndex: true,
 }, function () {
-    console.log("mongoose connected to database!");
+    console.log("mongoose connected to " + process.env.NODE_ENV + " database!");
 });
 var port = process.env.PORT || 3000;
 app_1.default.listen(port, function () {

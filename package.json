@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node build/server.js",
+    "build": "node build/server.js",
     "start:dev:build": "tsc -w",
     "start:dev:run": "nodemon build/server.js",
     "start:dev": "concurrently npm:start:dev:*"

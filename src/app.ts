@@ -10,6 +10,7 @@ import userRouter from "./routes/user.router";
 import productRouter from "./routes/product.router";
 import { APPError } from "./error/app.error";
 import { globalErrorController } from "./error/global.error.controller";
+
 const app = express();
 
 if (process.env.NODE_ENV === "development") {
@@ -22,11 +23,13 @@ const limiter = rateLimit({
   message: "too many request from this IP please try again in an hour",
 });
 
-app.use(
-  cors({
-    credentials: true,
-  })
-);
+const corsOptions = {
+  credentials: true,
+  origin: process.env.NODE_ENV === "production" ? "*" : "http://localhost:8100",
+};
+
+app.use(cors(corsOptions));
+
 app.options("*", cors);
 app.use(express.json());
 app.use(cookieParser());

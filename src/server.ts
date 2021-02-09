@@ -19,7 +19,7 @@ mongoose.connect(
     useCreateIndex: true,
   },
   () => {
-    console.log(`mongoose connected to database!`);
+    console.log(`mongoose connected to ${process.env.NODE_ENV} database!`);
   }
 );
 
