@@ -24,10 +24,7 @@ var limiter = express_rate_limit_1.default({
     windowMs: 60 * 60 * 1000,
     message: "too many request from this IP please try again in an hour",
 });
-app.use(cors_1.default({
-    credentials: true,
-    origin: ["http://localhost:8100"],
-}));
+app.use(cors_1.default());
 app.use(express_1.default.json());
 app.use(cookie_parser_1.default());
 //Data sanitization against NoSQL query injection
@@ -40,6 +37,7 @@ app.use(hpp_1.default({
     whitelist: [],
 }));
 app.use(helmet_1.default());
+app.options("*", cors_1.default);
 app.use("/api", limiter);
 app.use("/api/v1/products", product_router_1.default);
 app.use("/api/v1/users", user_router_1.default);

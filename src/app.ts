@@ -22,7 +22,11 @@ const limiter = rateLimit({
   message: "too many request from this IP please try again in an hour",
 });
 
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 //Data sanitization against NoSQL query injection

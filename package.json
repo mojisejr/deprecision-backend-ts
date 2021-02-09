@@ -5,9 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node build/server.js",
-    "start:build": "tsc -w",
-    "start:run": "NODE_ENV=production nodemon build/server.js",
-    "start:dev": "concurrently npm:start:*"
+    "start:dev:build": "tsc -w",
+    "start:dev:run": "nodemon build/server.js",
+    "start:dev": "concurrently npm:start:dev:*"
   },
   "keywords": [],
   "author": "",
