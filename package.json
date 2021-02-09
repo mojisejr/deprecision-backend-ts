@@ -4,9 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "build": "node build/server.js",
+    "start": "node build/server.js",
     "start:dev:build": "tsc -w",
     "start:dev:run": "nodemon build/server.js",
+    "start:production": "NODE_ENV=production nodemon build/server.js",
     "start:dev": "concurrently npm:start:dev:*"
   },
   "keywords": [],
