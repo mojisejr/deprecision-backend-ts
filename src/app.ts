@@ -25,6 +25,7 @@ const limiter = rateLimit({
 app.use(
   cors({
     credentials: true,
+    origin: ["http://localhost:8100/"],
   })
 );
 app.use(express.json());
