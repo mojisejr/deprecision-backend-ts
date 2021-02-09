@@ -26,7 +26,9 @@ var limiter = express_rate_limit_1.default({
 });
 var corsOptions = {
     credentials: true,
-    origin: process.env.NODE_ENV === "production" ? "*" : "http://localhost:8100",
+    origin: process.env.NODE_ENV === "production"
+        ? "https://deprecision.co"
+        : "http://localhost:8100",
 };
 app.use(cors_1.default(corsOptions));
 app.options("*", cors_1.default);

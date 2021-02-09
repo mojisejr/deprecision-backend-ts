@@ -25,7 +25,10 @@ const limiter = rateLimit({
 
 const corsOptions = {
   credentials: true,
-  origin: process.env.NODE_ENV === "production" ? "*" : "http://localhost:8100",
+  origin:
+    process.env.NODE_ENV === "production"
+      ? "https://deprecision.co"
+      : "http://localhost:8100",
 };
 
 app.use(cors(corsOptions));
