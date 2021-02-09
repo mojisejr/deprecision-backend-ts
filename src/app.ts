@@ -22,12 +22,7 @@ const limiter = rateLimit({
   message: "too many request from this IP please try again in an hour",
 });
 
-app.use(
-  cors({
-    credentials: true,
-    origin: ["http://localhost:8100"],
-  })
-);
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 //Data sanitization against NoSQL query injection
@@ -44,6 +39,7 @@ app.use(
 );
 
 app.use(helmet());
+app.options("*", cors);
 app.use("/api", limiter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/users", userRouter);

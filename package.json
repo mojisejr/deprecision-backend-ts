@@ -2,11 +2,12 @@
   "name": "nodets",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "start": "node build/server.js",
     "start:build": "tsc -w",
     "start:run": "NODE_ENV=production nodemon build/server.js",
-    "start": "concurrently npm:start:*"
+    "start:dev": "concurrently npm:start:*"
   },
   "keywords": [],
   "author": "",
@@ -54,6 +55,6 @@
     "prettier": "^2.2.1"
   },
   "engines": {
-    "node": ">=10.0.0"
+    "node": "^10"
   }
 }
