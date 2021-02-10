@@ -32,8 +32,11 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
-app.options("*", cors);
+app.options("*", (next: NextFunction) => {
+  console.log("cors in option call");
+  cors(corsOptions);
+  next();
+});
 app.use(express.json());
 app.use(cookieParser());
 //Data sanitization against NoSQL query injection

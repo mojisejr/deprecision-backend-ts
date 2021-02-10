@@ -31,7 +31,11 @@ var corsOptions = {
         : "http://localhost:8100",
 };
 app.use(cors_1.default(corsOptions));
-app.options("*", cors_1.default);
+app.options("*", function (next) {
+    console.log("cors in option call");
+    cors_1.default(corsOptions);
+    next();
+});
 app.use(express_1.default.json());
 app.use(cookie_parser_1.default());
 //Data sanitization against NoSQL query injection

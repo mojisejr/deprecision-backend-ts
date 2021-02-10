@@ -348,7 +348,7 @@ var AuthController = /** @class */ (function () {
             secure: process.env.NODE_ENV === "production" ? true : false,
             //ป้องกัน cross site scipting คือจะแก้ cookie กันนี้ไม่ได้เป็น readonly
             httpOnly: true,
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         });
         user.password = undefined;
         res.status(statusCode).json({
