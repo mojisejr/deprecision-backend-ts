@@ -12,6 +12,7 @@ import { jwtDecodedDTO } from "../dto/jwt.dto";
 import { IAuthRepository } from "../repository/auth.repository.interface";
 import { IEmailSender } from "./../../core/interfaces/base.emailsender";
 import { IUser } from "../../domain/users/model/user.interface";
+import { preProcessFile } from "typescript";
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -52,7 +53,7 @@ export class AuthController implements IAuthController {
       //หมายถึงต้องใช้กับ https เท่านั้น
       secure: process.env.NODE_ENV === "production" ? true : false,
       //ป้องกัน cross site scipting คือจะแก้ cookie กันนี้ไม่ได้เป็น readonly
-      httpOnly: true,
+      // httpOnly: true,
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     });
     user.password = undefined;
@@ -112,6 +113,7 @@ export class AuthController implements IAuthController {
       res.cookie("jwt", "logged out", {
         expires: new Date(Date.now() + 10 * 1000),
         httpOnly: true,
+        sameSite: "none",
       });
 
       res.status(200).json({

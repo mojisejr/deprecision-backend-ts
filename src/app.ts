@@ -27,7 +27,7 @@ const corsOptions = {
   credentials: true,
   origin:
     process.env.NODE_ENV === "production"
-      ? "https://deprecision.co"
+      ? ["https://deprecision.co"]
       : "http://localhost:8100",
 };
 
