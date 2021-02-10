@@ -134,6 +134,7 @@ var AuthController = /** @class */ (function () {
                 res.cookie("jwt", "logged out", {
                     expires: new Date(Date.now() + 10 * 1000),
                     httpOnly: true,
+                    sameSite: "none",
                 });
                 res.status(200).json({
                     status: "success",
@@ -347,7 +348,7 @@ var AuthController = /** @class */ (function () {
             //หมายถึงต้องใช้กับ https เท่านั้น
             secure: process.env.NODE_ENV === "production" ? true : false,
             //ป้องกัน cross site scipting คือจะแก้ cookie กันนี้ไม่ได้เป็น readonly
-            httpOnly: true,
+            httpOnly: false,
             sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         });
         user.password = undefined;
