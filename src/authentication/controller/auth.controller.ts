@@ -53,7 +53,7 @@ export class AuthController implements IAuthController {
       //หมายถึงต้องใช้กับ https เท่านั้น
       secure: process.env.NODE_ENV === "production" ? true : false,
       //ป้องกัน cross site scipting คือจะแก้ cookie กันนี้ไม่ได้เป็น readonly
-      // httpOnly: true,
+      httpOnly: false,
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     });
     user.password = undefined;
