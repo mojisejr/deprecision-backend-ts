@@ -10,7 +10,6 @@ var express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 var helmet_1 = __importDefault(require("helmet"));
 var express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize"));
 var hpp_1 = __importDefault(require("hpp"));
-var cookie_parser_1 = __importDefault(require("cookie-parser"));
 var user_router_1 = __importDefault(require("./routes/user.router"));
 var product_router_1 = __importDefault(require("./routes/product.router"));
 var app_error_1 = require("./error/app.error");
@@ -31,13 +30,13 @@ var corsOptions = {
         : "http://localhost:8100",
 };
 app.use(cors_1.default(corsOptions));
-app.options("*", function (next) {
-    console.log("cors in option call");
-    cors_1.default(corsOptions);
-    next();
-});
+// app.options("*", (next: NextFunction) => {
+//   console.log("cors in option call");
+//   cors(corsOptions);
+//   next();
+// });
 app.use(express_1.default.json());
-app.use(cookie_parser_1.default());
+// app.use(cookieParser());
 //Data sanitization against NoSQL query injection
 app.use(express_mongo_sanitize_1.default());
 //Data sanitization against XSS

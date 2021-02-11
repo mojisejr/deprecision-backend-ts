@@ -12,7 +12,6 @@ import { jwtDecodedDTO } from "../dto/jwt.dto";
 import { IAuthRepository } from "../repository/auth.repository.interface";
 import { IEmailSender } from "./../../core/interfaces/base.emailsender";
 import { IUser } from "../../domain/users/model/user.interface";
-import { preProcessFile } from "typescript";
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -46,16 +45,16 @@ export class AuthController implements IAuthController {
     const token = this.signToken(user._id);
     //set the jwt to the cookie
     //do not expose password to user via response
-    res.cookie("jwt", token, {
-      expires: new Date(
-        Date.now() + +process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-      ),
-      //หมายถึงต้องใช้กับ https เท่านั้น
-      secure: process.env.NODE_ENV === "production" ? true : false,
-      //ป้องกัน cross site scipting คือจะแก้ cookie กันนี้ไม่ได้เป็น readonly
-      httpOnly: false,
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    });
+    // res.cookie("jwt", token, {
+    //   expires: new Date(
+    //     Date.now() + +process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    //   ),
+    //   //หมายถึงต้องใช้กับ https เท่านั้น
+    //   secure: process.env.NODE_ENV === "production" ? true : false,
+    //   //ป้องกัน cross site scipting คือจะแก้ cookie กันนี้ไม่ได้เป็น readonly
+    //   httpOnly: false,
+    //   sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    // });
     user.password = undefined;
     res.status(statusCode).json({
       status: "success",
@@ -110,47 +109,15 @@ export class AuthController implements IAuthController {
 
   signOut = catchAsyncError(
     async (req: Request, res: Response, next: NextFunction) => {
-      res.cookie("jwt", "logged out", {
-        expires: new Date(Date.now() + 10 * 1000),
-        httpOnly: true,
-        sameSite: "none",
-      });
+      // res.cookie("jwt", "logged out", {
+      //   expires: new Date(Date.now() + 10 * 1000),
+      //   httpOnly: true,
+      //   sameSite: "none",
+      // });
 
       res.status(200).json({
         status: "success",
       });
-    }
-  );
-
-  //same with protect function but no error just next() to the other middleware
-  isLoggedIn = catchAsyncError(
-    async (req: Request, res: Response, next: NextFunction) => {
-      let loggedInToken = null;
-      if (req.cookies.jwt) {
-        loggedInToken = req.cookies.jwt;
-      }
-      if (!loggedInToken) {
-        return next();
-      }
-      const decodedData = await this.jwtTokenVerification(
-        loggedInToken,
-        process.env.JWT_SECRET
-      );
-
-      const loggedInUser = await this.userRepository.getById(decodedData.id);
-      if (!loggedInUser) {
-        return next();
-      }
-      const passwordChanged = this.userRepository.isPasswordChangedAfterIssued(
-        loggedInUser.passwordChangedAt,
-        decodedData.iat
-      );
-      if (passwordChanged) {
-        return next();
-      }
-
-      req.user = loggedInUser;
-      next();
     }
   );
 
@@ -162,9 +129,10 @@ export class AuthController implements IAuthController {
         req.headers.authorization.startsWith("Bearer")
       ) {
         inputJwtToken = req.headers.authorization.split(" ")[1];
-      } else if (req.cookies.jwt) {
-        inputJwtToken = req.cookies.jwt;
       }
+      // else if (req.cookies.jwt) {
+      //   inputJwtToken = req.cookies.jwt;
+      // }
       if (!inputJwtToken) {
         return next(APPError.create("You are not logged in", 401));
       }

@@ -32,13 +32,13 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options("*", (next: NextFunction) => {
-  console.log("cors in option call");
-  cors(corsOptions);
-  next();
-});
+// app.options("*", (next: NextFunction) => {
+//   console.log("cors in option call");
+//   cors(corsOptions);
+//   next();
+// });
 app.use(express.json());
-app.use(cookieParser());
+// app.use(cookieParser());
 //Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
 //Data sanitization against XSS
