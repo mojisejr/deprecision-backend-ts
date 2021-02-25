@@ -1,0 +1,180 @@
+*,
+*::before,
+*::after {
+  padding: 0;
+  margin: 0;
+  box-sizing: inherit;
+}
+html {
+  font-size: 62.5%;
+}
+body {
+  box-sizing: border-box;
+  color: #333;
+  padding: 2rem;
+}
+
+.container {
+  position: relative;
+  height: 95vh;
+  background-image: linear-gradient(
+    to left bottom,
+    rgba(247, 242, 242, 0.685),
+    rgba(192, 188, 188, 0.178)
+  );
+  border-radius: 1rem;
+  box-shadow: 0 2rem 3rem rgba(51, 51, 51, 0.2);
+}
+
+.header {
+  position: relative;
+  height: 20vh;
+}
+
+.logo {
+  position: absolute;
+  top: 10%;
+  left: 3%;
+  width: 12rem;
+  height: 12rem;
+  background-image: url(./../img/logo-transparent.png);
+  background-size: cover;
+}
+
+.logo:hover {
+  cursor: pointer;
+}
+
+.menu {
+  position: absolute;
+  top: 10%;
+  right: 3%;
+  font-size: 3rem;
+}
+
+.menu a {
+  color: #777;
+}
+
+.menu a:hover {
+  color: #fff;
+  background-color: rgb(231, 161, 68);
+}
+
+.login {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  padding: 3rem;
+  transform: translateX(-55%);
+  border-radius: 2rem;
+  /* background-color: rgba(175, 173, 173, 0.151); */
+  background-color: rgba(231, 161, 68, 0.2);
+}
+
+.form-control {
+  display: flex;
+  font-size: 2rem;
+}
+
+.form-control:not(:last-child) {
+  padding: 1rem;
+}
+
+.form-align-center {
+  display: flex;
+  justify-content: center;
+}
+
+.form-control span {
+  margin-right: 1rem;
+}
+
+.form-input {
+  border-style: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.btn {
+  font-size: 2rem;
+  border-radius: 100px;
+  border-style: none;
+  padding: 1rem 4rem;
+}
+
+.btn-login {
+  cursor: pointer;
+  color: rgba(51, 51, 51);
+  border: 1px solid rgb(231, 161, 68);
+}
+
+.btn-login:hover {
+  color: #fff;
+  background-color: rgb(231, 161, 68);
+  border: 1px solid #fff;
+}
+
+.hint {
+  position: absolute;
+  bottom: 3%;
+  right: 3%;
+  font-size: 1.3rem;
+}
+
+/*
+HOME PAGE*/
+.list-container {
+  position: absolute;
+  top: 22%;
+  left: 12%;
+}
+
+.product-card {
+  display: inline-block;
+  padding: 1.5rem;
+  margin: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+
+.product-card p {
+  font-size: 1.3rem;
+}
+
+.button-box {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-detail {
+  font-size: 1.3rem;
+  color: rgb(231, 161, 68);
+}
+
+/*INFO PAGE*/
+.info-container {
+  position: absolute;
+  top: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+}
+
+.info-header {
+  border-left: 2px solid rgb(231, 161, 68);
+  padding: 1rem;
+}
+.info-content {
+  display: inline-block;
+  margin-top: 1rem;
+}
+.info-content p {
+  margin-bottom: 2rem;
+}
+
+.info-content img {
+  width: 30rem;
+  padding: 0.4rem;
+  background-size: cover;
+}

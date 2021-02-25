@@ -171,6 +171,7 @@ var AuthController = /** @class */ (function () {
                             return [2 /*return*/, next(app_error_1.APPError.create("password was changed please re-login again.", 401))];
                         }
                         req.user = user;
+                        res.locals.user = user;
                         next();
                         return [2 /*return*/];
                 }

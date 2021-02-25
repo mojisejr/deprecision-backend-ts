@@ -1,3 +1,4 @@
+import path from "path";
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import morgan from "morgan";
@@ -5,13 +6,21 @@ import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
 import hpp from "hpp";
-import cookieParser from "cookie-parser";
+// import cookieParser from "cookie-parser";
+//ROUTER
 import userRouter from "./routes/user.router";
 import productRouter from "./routes/product.router";
+import viewsRouter from "./routes/views.router";
+
 import { APPError } from "./error/app.error";
 import { globalErrorController } from "./error/global.error.controller";
 
 const app = express();
+
+app.set("view engine", "pug");
+//ตรงนี้เวลา serve static file จะต้องใช้ lib path
+app.set("views", path.join(__dirname, "views"));
+app.use(express.static(path.join(__dirname, "public")));
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
@@ -52,7 +61,17 @@ app.use(
   })
 );
 
+//API ROUTEs
 app.use(helmet());
+//middleware to fixed the issue about csp of third party javascript
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "script-src 'self' https://cdnjs.cloudflare.com; object-src 'self'"
+  );
+  next();
+});
+app.use("/", viewsRouter);
 app.use("/api", limiter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/users", userRouter);

@@ -1,0 +1,30 @@
+doctype html
+html
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    //- meta(http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'https://cdnjs.cloudflare.com'") 
+    link(rel="stylesheet" href="/css/style.css")
+    link(rel="shotcut icon" type="image/png" href="/img/favicon.png")
+    title deprecision.co
+  body
+    div.container
+      //Header
+      include components/_header
+      //Content
+      block content
+        div.login
+          form.login-form(action="")
+            .form-control
+              span username:
+              input#email.form-input.username(type="text")
+            .form-control
+              span password:
+              input#password.form-input.password(type="password")
+            .form-control.form-align-center
+              input.btn.btn-login(type="submit" value="login")
+      //footer
+      include components/_footer
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" type="text/javascript")
+    //- script(src="https://unpkg.com/axios/dist/axios.min.js")
+    script(src="js/index.js" type="text/javascript")

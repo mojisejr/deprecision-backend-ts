@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.catchAsyncError = void 0;
-exports.catchAsyncError = function (asyncFunctionInput) {
+var catchAsyncError = function (asyncFunctionInput) {
     return function (req, res, next) {
         asyncFunctionInput(req, res, next).catch(function (error) {
             console.log("error", error);
@@ -9,3 +9,4 @@ exports.catchAsyncError = function (asyncFunctionInput) {
         });
     };
 };
+exports.catchAsyncError = catchAsyncError;

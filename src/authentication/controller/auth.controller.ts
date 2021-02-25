@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { inject, injectable } from "inversify";
 import * as jwt from "jsonwebtoken";
-import crypto, { sign } from "crypto";
+import crypto from "crypto";
 import { catchAsyncError } from "../../core/catchAsyncError";
 import TYPES from "../../core/container/types";
 // import { UserRepository } from "../domain/users/repository/user.repository";
@@ -158,6 +158,7 @@ export class AuthController implements IAuthController {
         );
       }
       req.user = user;
+      res.locals.user = user;
       next();
     }
   );

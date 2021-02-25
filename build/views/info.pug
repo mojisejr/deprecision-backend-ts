@@ -1,0 +1,15 @@
+extend base
+
+block content
+  - const message = "use the public url from google drive. right click at the image in google drive then select 'get link' at the dropdown select 'everyone who has the link' copy url then paste into the imageUrl field"
+  .info-container
+    .info-header 
+      .info-titile 
+        h1.title Using image url from google drive
+      .info-subtitle how to add image url to database.
+    .info-content 
+      p.detail= message
+      img.goo-01(src="/img/googledrive-guide/goo-01.png")
+      img.goo-02(src="/img/googledrive-guide/goo-02.png")
+      img.goo-03(src="/img/googledrive-guide/goo-03.png")
+      img.goo-04(src="/img/googledrive-guide/goo-04.png")
