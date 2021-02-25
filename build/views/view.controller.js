@@ -42,10 +42,7 @@ var catchAsyncError_1 = require("./../core/catchAsyncError");
 var productRepo = new product_repository_1.ProductRepository();
 var getLoginPage = catchAsyncError_1.catchAsyncError(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        res.status(200).render("base", {
-            tour: "the forest hiker",
-            user: "nonthasak",
-        });
+        res.status(200).render("base");
         return [2 /*return*/];
     });
 }); });

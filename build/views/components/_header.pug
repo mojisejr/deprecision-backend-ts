@@ -1,4 +1,12 @@
 div.header
   div.logo
   div.menu
-      a.menu__link(href="/info") .info
+    ul 
+      if user 
+        li
+          a.menu_link(href="#") #{user.name}
+      li
+        a.menu__link(href="/info") .info
+      if user
+        li 
+          a.menu_link.signOut .logout

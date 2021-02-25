@@ -131,15 +131,15 @@ var AuthController = /** @class */ (function () {
         }); });
         this.signOut = catchAsyncError_1.catchAsyncError(function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                // res.cookie("jwt", "logged out", {
-                //   expires: new Date(Date.now() + 10 * 1000),
-                //   httpOnly: true,
-                //   sameSite: "none",
-                // });
+                res.cookie("jwt", "logged out", {
+                    expires: new Date(Date.now() + 10 * 1000),
+                    httpOnly: true,
+                    sameSite: "strict",
+                });
                 res.status(200).json({
                     status: "success",
                 });
-                return [2 /*return*/];
+                return [2 /*return*/, next()];
             });
         }); });
         this.protect = catchAsyncError_1.catchAsyncError(function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
@@ -151,9 +151,9 @@ var AuthController = /** @class */ (function () {
                             req.headers.authorization.startsWith("Bearer")) {
                             inputJwtToken = req.headers.authorization.split(" ")[1];
                         }
-                        // else if (req.cookies.jwt) {
-                        //   inputJwtToken = req.cookies.jwt;
-                        // }
+                        else if (req.cookies.jwt) {
+                            inputJwtToken = req.cookies.jwt;
+                        }
                         if (!inputJwtToken) {
                             return [2 /*return*/, next(app_error_1.APPError.create("You are not logged in", 401))];
                         }
@@ -312,16 +312,16 @@ var AuthController = /** @class */ (function () {
         var token = this.signToken(user._id);
         //set the jwt to the cookie
         //do not expose password to user via response
-        // res.cookie("jwt", token, {
-        //   expires: new Date(
-        //     Date.now() + +process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-        //   ),
-        //   //หมายถึงต้องใช้กับ https เท่านั้น
-        //   secure: process.env.NODE_ENV === "production" ? true : false,
-        //   //ป้องกัน cross site scipting คือจะแก้ cookie กันนี้ไม่ได้เป็น readonly
-        //   httpOnly: false,
-        //   sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        // });
+        res.cookie("jwt", token, {
+            expires: new Date(Date.now() + +process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
+            //หมายถึงต้องใช้กับ https เท่านั้น
+            // secure: process.env.NODE_ENV === "production" ? true : false,
+            secure: true,
+            //ป้องกัน cross site scipting คือจะแก้ cookie กันนี้ไม่ได้เป็น readonly
+            httpOnly: true,
+            // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            sameSite: "none",
+        });
         user.password = undefined;
         res.status(statusCode).json({
             status: "success",

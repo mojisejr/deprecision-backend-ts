@@ -8,7 +8,8 @@
     "start:dev:build": "tsc -w",
     "start:dev:run": "nodemon build/server.js",
     "start:production": "NODE_ENV=production nodemon build/server.js",
-    "start:dev": "concurrently npm:start:dev:*"
+    "start:dev": "concurrently npm:start:dev:*",
+    "build:js": "parcel watch build/public/js/index.js"
   },
   "keywords": [],
   "author": "",

@@ -3,10 +3,7 @@ import { ProductRepository } from "./../domain/products/repository/product.repos
 import { catchAsyncError } from "./../core/catchAsyncError";
 const productRepo = new ProductRepository();
 const getLoginPage = catchAsyncError(async (req: Request, res: Response) => {
-  res.status(200).render("base", {
-    tour: "the forest hiker",
-    user: "nonthasak",
-  });
+  res.status(200).render("base");
 });
 
 const getHomePage = catchAsyncError(async (req: Request, res: Response) => {

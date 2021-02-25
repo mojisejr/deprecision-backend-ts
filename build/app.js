@@ -11,7 +11,7 @@ var express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 var helmet_1 = __importDefault(require("helmet"));
 var express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize"));
 var hpp_1 = __importDefault(require("hpp"));
-// import cookieParser from "cookie-parser";
+var cookie_parser_1 = __importDefault(require("cookie-parser"));
 //ROUTER
 var user_router_1 = __importDefault(require("./routes/user.router"));
 var product_router_1 = __importDefault(require("./routes/product.router"));
@@ -44,7 +44,7 @@ app.use(cors_1.default(corsOptions));
 //   next();
 // });
 app.use(express_1.default.json());
-// app.use(cookieParser());
+app.use(cookie_parser_1.default());
 //Data sanitization against NoSQL query injection
 app.use(express_mongo_sanitize_1.default());
 //Data sanitization against XSS

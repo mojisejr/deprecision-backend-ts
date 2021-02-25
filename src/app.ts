@@ -6,7 +6,7 @@ import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
 import hpp from "hpp";
-// import cookieParser from "cookie-parser";
+import cookieParser from "cookie-parser";
 //ROUTER
 import userRouter from "./routes/user.router";
 import productRouter from "./routes/product.router";
@@ -47,7 +47,7 @@ app.use(cors(corsOptions));
 //   next();
 // });
 app.use(express.json());
-// app.use(cookieParser());
+app.use(cookieParser());
 //Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
 //Data sanitization against XSS
