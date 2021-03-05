@@ -13,19 +13,5 @@ html
       include components/_header
       //Content
       block content
-        div.login
-          form.login-form(action="")
-            .form-control
-              span username:
-              input#email.form-input.username(type="text")
-            .form-control
-              span password:
-              input#password.form-input.password(type="password")
-            .form-control.form-align-center
-              input.btn.btn-login(type="submit" value="login")
-      //footer
-      include components/_footer
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" type="text/javascript")
-    //- script(src="https://unpkg.com/axios/dist/axios.min.js")
-    //- script(src="js/login.js" type="text/javascript")
-    script(src="js/index.js" type="text/javascript")
+        include components/_loginCard
+    script(src="/js/bundle.js")

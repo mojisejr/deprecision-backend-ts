@@ -1,15 +1,22 @@
 extends base
 
-block content 
-  .list-container
-    .list-header
-      h1 products
-    if products
-      each product in products
-        .product-card
-          h1= product.model_no
-          p= "type: " + product.type
-          p= "id[ " + product._id + " ]"
-          p= "createdAt: " + product.createdAt
-          .button-box
-            a.btn-detail(href="#") detail
+block content
+  .home-container 
+    .list-container
+      .list-header
+        h1 Products
+        //- .search-box 
+        //-   input#searchInput.form-input.search-input(type="text" placeholder="eg. category=emergency tolley")
+        //-   input.btn.btn-search(type="submit" value="search")
+          
+      if products.length > 0
+        each product in products
+          include components/_productCard
+            //- .button-box
+            //-   a.btn-detail(href="#") detail
+        
+      if products.length === 0
+        .no-more-product-container
+          include components/_noMoreProduct
+      include components/_paginator
+    //- include components/_product

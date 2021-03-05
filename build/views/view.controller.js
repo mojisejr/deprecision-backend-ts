@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getInfoPage = exports.getProductPage = exports.getHomePage = exports.getLoginPage = void 0;
+exports.getInfoPage = exports.getNewProductPage = exports.getProductPage = exports.getHomePage = exports.getLoginPage = void 0;
 var product_repository_1 = require("./../domain/products/repository/product.repository");
 var catchAsyncError_1 = require("./../core/catchAsyncError");
 var productRepo = new product_repository_1.ProductRepository();
@@ -48,33 +48,57 @@ var getLoginPage = catchAsyncError_1.catchAsyncError(function (req, res) { retur
 }); });
 exports.getLoginPage = getLoginPage;
 var getHomePage = catchAsyncError_1.catchAsyncError(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var products;
+    var query, products;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, productRepo.getAll("")];
+            case 0:
+                query = req.query;
+                return [4 /*yield*/, productRepo.getAll(query)];
             case 1:
                 products = _a.sent();
                 res.status(200).render("home", {
+                    page: "home",
                     products: products,
+                    currentPage: query.page,
                 });
                 return [2 /*return*/];
         }
     });
 }); });
 exports.getHomePage = getHomePage;
-var getProductPage = function (req, res) {
-    res.status(200).render("home", {
-        user: "nonthasak",
-        product: {
-            name: "Product test",
-            type: "Tolley",
-        },
+var getProductPage = catchAsyncError_1.catchAsyncError(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var id, product;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                id = req.params.id;
+                return [4 /*yield*/, productRepo.getById(id)];
+            case 1:
+                product = _a.sent();
+                console.log("userid", id);
+                res.status(200).render("product", {
+                    page: "product",
+                    product: product,
+                });
+                return [2 /*return*/];
+        }
     });
-};
+}); });
 exports.getProductPage = getProductPage;
+var getNewProductPage = catchAsyncError_1.catchAsyncError(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        res.status(200).render("newProduct", {
+            page: "newProduct",
+        });
+        return [2 /*return*/];
+    });
+}); });
+exports.getNewProductPage = getNewProductPage;
 var getInfoPage = catchAsyncError_1.catchAsyncError(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        res.status(200).render("info");
+        res.status(200).render("info", {
+            page: "info",
+        });
         return [2 /*return*/];
     });
 }); });

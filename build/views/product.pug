@@ -1,0 +1,51 @@
+extends base
+
+block content
+  .product-detail-container
+    .product-header 
+      h1.product-title #{product.model_no}
+    .product-detail-box
+      .product-img
+        img(src=product.image_url)
+      .product-detail-list
+        ul
+          li
+            .product-list-item
+              h3.list-item-title brand:
+              p #{product.brand}
+          li
+            .product-list-item
+              h3.list-item-title type: 
+              p #{product.type}
+          li
+            .product-list-item
+              h3.list-item-title category: 
+              p #{product.category}
+          li
+            .product-list-item
+              h3.list-item-title size: 
+              p #{product.size[0]}mm x #{product.size[1]}mm x #{product.size[2]}mm
+          li
+            .product-list-item
+              h3.list-item-title configuration: 
+              each config in product.configurations
+                p #{config}
+          li
+            .product-list-item
+              h3.list-item-title detail: 
+              p #{product.details}
+          li
+            .product-list-item
+              h3.list-item-title created at: 
+              p #{product.createdAt}
+          li
+            .product-list-item
+              h3.list-item-title recomended: 
+              p#recommend #{product.recommend}
+          li
+            .product-list-item
+              .product-list-btn-box
+                input.btn.btn-mark(type="submit" value="Mark as Recommend")
+                input.btn.btn-delete(type="submit" value="Delete")
+              
+                

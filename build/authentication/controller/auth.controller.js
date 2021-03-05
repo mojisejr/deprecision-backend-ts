@@ -139,7 +139,7 @@ var AuthController = /** @class */ (function () {
                 res.status(200).json({
                     status: "success",
                 });
-                return [2 /*return*/, next()];
+                return [2 /*return*/];
             });
         }); });
         this.protect = catchAsyncError_1.catchAsyncError(function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {

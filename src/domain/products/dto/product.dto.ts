@@ -9,4 +9,5 @@ export interface ProductDTO extends DTO {
   size?: number[];
   details?: string;
   configurations?: string[];
+  imageUrl?: string;
 }

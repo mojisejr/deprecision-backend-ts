@@ -120,7 +120,6 @@ export class AuthController implements IAuthController {
       res.status(200).json({
         status: "success",
       });
-      return next();
     }
   );
 

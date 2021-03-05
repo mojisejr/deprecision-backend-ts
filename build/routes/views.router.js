@@ -26,6 +26,7 @@ var router = express_1.Router();
 //VIEW ROUTEs
 router.get("/", views.getLoginPage);
 router.get("/home", container_1.authController.protect, views.getHomePage);
-router.get("/info", views.getInfoPage);
-router.get("/product", views.getProductPage);
+router.get("/info", container_1.authController.protect, views.getInfoPage);
+router.get("/newProduct", container_1.authController.protect, views.getNewProductPage);
+router.get("/products/:id", container_1.authController.protect, views.getProductPage);
 exports.default = router;

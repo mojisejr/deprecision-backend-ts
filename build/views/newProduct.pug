@@ -1,0 +1,35 @@
+extends base
+
+block content
+  .product-detail-container.new-product
+    .new-product-header
+      h1.title new product 
+    .new-product-form-container
+      form.new-product-form(action="")
+        .form-control
+          .label model number*: 
+          input#modelNo.form-input.new-product(type="text" required placeholder="eg. AT001-1")
+        .form-control
+          .label type*: 
+          input#type.form-input.new-product(type="text" required placeholder="Tolley")
+        .form-control
+          .label category*: 
+          input#category.form-input.new-product(type="text" required placeholder="Emergency Tolley")
+        .form-control
+          .label brand:
+          input#brand.form-input.new-product(type="text" placeholder="default = No Brand")
+        .form-control
+          .label size: 
+          input#size.form-input.new-product(type="text" placeholder="width, length, height -> '100,200,300'")
+        .form-control
+          .label configurations: 
+          input#configurations.form-input.new-product(type="text" placeholder="separated each item with ','")
+        .form-control
+          .label details: 
+          input#details.form-input.new-product(type="text" placeholder="standard medical grade")
+        .form-control
+          .label google image url: 
+          input#imageUrl.form-input.new-product(type="text" placeholder="sharing url from google drive")
+        .form-control
+          input.btn.btn-login(type="submit" value="OK")
+          input.btn.btn-login(type="reset" value="Reset")

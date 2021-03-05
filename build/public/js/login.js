@@ -1,22 +1,28 @@
-const login = async (email, password) => {
+import "@babel/polyfill";
+import "regenerator-runtime";
+import axios from "axios";
+export const login = async (email, password) => {
   try {
-    const response = await axios.post(
-      "http://localhost:3000/api/v1/users/login",
-      {
+    const result = await axios({
+      method: "POST",
+      url: "http://localhost:3000/api/v1/users/login",
+      data: {
         email,
         password,
-      }
-    );
+      },
+    });
+    // const token = result.data.token;
+    const { user } = result.data.data;
+    if (user) {
+      setTimeout(() => {
+        window.location.assign("/home?page=1&limit=4");
+      }, 200);
+    }
   } catch (err) {
-    const { message } = err.response.data;
-    console.log(message);
+    alert(err.response.data.message);
   }
 };
 
-document.querySelector(".login-form").addEventListener("submit", (e) => {
-  e.preventDefault();
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  console.log(email, password);
-  login(email, password);
-});
+export const logout = async () => {
+  return await axios.get("http://localhost:3000/api/v1/users/logout");
+};

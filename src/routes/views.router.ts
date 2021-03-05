@@ -7,7 +7,8 @@ const router = Router();
 //VIEW ROUTEs
 router.get("/", views.getLoginPage);
 router.get("/home", authController.protect, views.getHomePage);
-router.get("/info", views.getInfoPage);
-router.get("/product", views.getProductPage);
+router.get("/info", authController.protect, views.getInfoPage);
+router.get("/newProduct", authController.protect, views.getNewProductPage);
+router.get("/products/:id", authController.protect, views.getProductPage);
 
 export default router;

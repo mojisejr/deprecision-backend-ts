@@ -1,12 +1,32 @@
 div.header
   div.logo
   div.menu
-    ul 
-      if user 
-        li
-          a.menu_link(href="#") #{user.name}
-      li
-        a.menu__link(href="/info") .info
-      if user
-        li 
-          a.menu_link.signOut .logout
+      ul 
+        if user
+          if page == 'home'
+            li
+              a.menu__link(href="/info") .info
+            li
+              a.newProduct.menu__link(href="/newProduct") .new product
+            li 
+              a.signOut.menu__link(href="#") .logout
+
+          if page == 'product'
+            li
+              a.newProduct.menu__link(href="/home?page=1&limit=4") <.back
+            li
+              a.newProduct.menu__link(href="/newProduct") .new product
+            li 
+              a.signOut.menu__link(href="#") .logout
+
+          if page == 'newProduct'
+            li
+              a.newProduct.menu__link(href="/home?page=1&limit=4") <.back
+          if page == 'info'
+            li
+              a.newProduct.menu__link(href="/home?page=1&limit=4") <.back
+            li
+              a.newProduct.menu__link(href="/newProduct") .new product
+
+
+        

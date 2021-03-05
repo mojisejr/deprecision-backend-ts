@@ -8,4 +8,5 @@ export interface IProduct {
   details: string;
   configurations: string[];
   recommend: boolean;
+  imageUrl?: string;
 }
